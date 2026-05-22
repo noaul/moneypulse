@@ -28,10 +28,10 @@ Build MoneyPulse, a single-user asset and recurring cost management app for phon
 4. [complete] Asset CRUD: phones, VPS, domains, subscriptions.
 5. [complete] Expenses, dashboard summary, expiring item aggregation.
 6. [complete] Settings, email testing, reminder scan and reminder logs.
-7. [in_progress] Frontend foundation: routing, auth flow, app shell, theme.
-8. [pending] Frontend pages: dashboard, asset lists, expenses, settings.
-9. [pending] Verification: tests, build, commit, push.
-10. [pending] Docker packaging and local Docker verification after push.
+7. [complete] Frontend foundation: routing, auth flow, app shell, theme.
+8. [complete] Frontend pages: dashboard, asset lists, expenses, settings.
+9. [complete] Verification: tests, build, commit, push.
+10. [complete] Docker packaging and local Docker verification after push.
 
 ## UI Acceptance Criteria
 - Dark mode is the default visual target.
@@ -45,3 +45,9 @@ Build MoneyPulse, a single-user asset and recurring cost management app for phon
 - Do not commit `.env`, SQLite databases, `data/`, `node_modules/`, `dist/`, or coverage output.
 - Do not force-push.
 - Run verification before claiming completion.
+
+## Verification Summary
+- Backend tests: 4 files, 7 tests passed.
+- Production dependency audit: 0 vulnerabilities with `npm audit --omit=dev`.
+- Full build: backend TypeScript and frontend Vite build passed; Vite reported only a chunk-size warning.
+- Docker: `docker compose build` passed; `docker compose up -d` started the app; `/api/health` returned `{"ok":true}`.
