@@ -12,7 +12,6 @@ import './styles.css';
 
 const savedTheme = localStorage.getItem('moneypulse-theme') ?? 'dark';
 document.documentElement.classList.toggle('dark', savedTheme !== 'light');
-document.documentElement.classList.toggle('light', savedTheme === 'light');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

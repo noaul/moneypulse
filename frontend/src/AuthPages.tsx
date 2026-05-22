@@ -23,32 +23,17 @@ export function LoginPage({ onAuthenticated }: { onAuthenticated: (user: User) =
   return (
     <AuthFrame title="登录 MoneyPulse">
       <form onSubmit={submit} className="space-y-4">
-        <Field label="用户名">
-          <input className={inputClass} value={username} onChange={(e) => setUsername(e.target.value)} />
-        </Field>
-        <Field label="密码">
-          <input
-            className={inputClass}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Field>
-        {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-        <Button className="w-full" type="submit">
-          登录
-        </Button>
+        <Field label="用户名"><input className={inputClass} value={username} onChange={(e) => setUsername(e.target.value)} /></Field>
+        <Field label="密码"><input className={inputClass} type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+        {error && <p className="text-sm text-rose-500">{error}</p>}
+        <Button className="w-full" type="submit">登录</Button>
       </form>
     </AuthFrame>
   );
 }
 
 export function SetupPage({ onAuthenticated }: { onAuthenticated: (user: User) => void }) {
-  const [form, setForm] = useState({
-    username: 'owner',
-    email: '',
-    password: ''
-  });
+  const [form, setForm] = useState({ username: 'owner', email: '', password: '' });
   const [error, setError] = useState('');
 
   const submit = async (event: FormEvent) => {
@@ -65,33 +50,11 @@ export function SetupPage({ onAuthenticated }: { onAuthenticated: (user: User) =
   return (
     <AuthFrame title="初始化 MoneyPulse">
       <form onSubmit={submit} className="space-y-4">
-        <Field label="用户名">
-          <input
-            className={inputClass}
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
-          />
-        </Field>
-        <Field label="提醒邮箱">
-          <input
-            className={inputClass}
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-        </Field>
-        <Field label="密码">
-          <input
-            className={inputClass}
-            type="password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
-        </Field>
-        {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-        <Button className="w-full" type="submit">
-          创建单用户账户
-        </Button>
+        <Field label="用户名"><input className={inputClass} value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} /></Field>
+        <Field label="提醒邮箱"><input className={inputClass} type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field>
+        <Field label="密码"><input className={inputClass} type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></Field>
+        {error && <p className="text-sm text-rose-500">{error}</p>}
+        <Button className="w-full" type="submit">创建单用户账户</Button>
       </form>
     </AuthFrame>
   );
@@ -99,15 +62,15 @@ export function SetupPage({ onAuthenticated }: { onAuthenticated: (user: User) =
 
 function AuthFrame({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background-dark px-4 py-10 text-zinc-100 light:bg-background-light light:text-zinc-950">
-      <div className="mx-auto mt-20 w-full max-w-sm rounded-md border border-zinc-800 bg-card-dark p-6 light:border-zinc-200 light:bg-white">
+    <div className="min-h-screen px-4 py-10">
+      <div className="mx-auto mt-20 w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-800 bg-zinc-950 light:border-zinc-200 light:bg-zinc-100">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
             <LockKeyhole size={17} />
           </div>
           <div>
             <h1 className="text-lg font-semibold">{title}</h1>
-            <p className="text-xs text-zinc-500">高密度资产费用管理</p>
+            <p className="text-xs text-zinc-500">资产费用管理</p>
           </div>
         </div>
         {children}

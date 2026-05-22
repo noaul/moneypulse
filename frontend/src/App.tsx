@@ -23,70 +23,35 @@ export default function App() {
   useEffect(() => {
     async function loadAuth() {
       const setup = await api.get<{ needsSetup: boolean }>('/api/auth/setup-status');
-      if (setup.needsSetup) {
-        setAuth({ status: 'needsSetup', user: null });
-        return;
-      }
-
+      if (setup.needsSetup) { setAuth({ status: 'needsSetup', user: null }); return; }
       try {
         const me = await api.get<{ user: User }>('/api/auth/me');
         setAuth({ status: 'authenticated', user: me.user });
       } catch (error) {
-        if (error instanceof ApiError && error.status === 401) {
-          setAuth({ status: 'anonymous', user: null });
-          return;
-        }
+        if (error instanceof ApiError && error.status === 401) { setAuth({ status: 'anonymous', user: null }); return; }
         throw error;
       }
     }
-
     loadAuth().catch(() => setAuth({ status: 'anonymous', user: null }));
   }, []);
 
-  const onAuthenticated = (user: User) => {
-    setAuth({ status: 'authenticated', user });
-    navigate('/dashboard');
-  };
+  const onAuthenticated = (user: User) => { setAuth({ status: 'authenticated', user }); navigate('/dashboard'); };
 
   if (auth.status === 'loading') {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background-dark font-mono text-sm text-zinc-500">
-        MoneyPulse loading...
-      </div>
-    );
+    return <div className="flex min-h-screen items-center justify-center font-mono text-sm text-zinc-500">MoneyPulse loading...</div>;
   }
 
   if (auth.status === 'needsSetup') {
-    return (
-      <Routes>
-        <Route path="/setup" element={<SetupPage onAuthenticated={onAuthenticated} />} />
-        <Route path="*" element={<Navigate to="/setup" replace />} />
-      </Routes>
-    );
+    return <Routes><Route path="/setup" element={<SetupPage onAuthenticated={onAuthenticated} />} /><Route path="*" element={<Navigate to="/setup" replace />} /></Routes>;
   }
 
   if (auth.status === 'anonymous') {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage onAuthenticated={onAuthenticated} />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    );
+    return <Routes><Route path="/login" element={<LoginPage onAuthenticated={onAuthenticated} />} /><Route path="*" element={<Navigate to="/login" replace />} /></Routes>;
   }
 
   return (
     <Routes>
-      <Route
-        element={
-          <Layout
-            user={auth.user}
-            onLogout={() => {
-              setAuth({ status: 'anonymous', user: null });
-              navigate('/login');
-            }}
-          />
-        }
-      >
+      <Route element={<Layout user={auth.user} onLogout={() => { setAuth({ status: 'anonymous', user: null }); navigate('/login'); }} />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         {assetPageConfigs.map((config) => (
