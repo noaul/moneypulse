@@ -1,18 +1,5 @@
 import { useState } from 'react';
-import {
-  Globe2,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  Moon,
-  ReceiptText,
-  Repeat2,
-  Server,
-  Settings,
-  Smartphone,
-  Sun,
-  X
-} from 'lucide-react';
+import { Globe2, LayoutDashboard, LogOut, Menu, Moon, ReceiptText, Repeat2, Server, Settings, Smartphone, Sun, X } from 'lucide-react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import type { User } from './types';
@@ -40,30 +27,21 @@ export function Layout({ user, onLogout }: { user: User; onLogout: () => void })
     localStorage.setItem('moneypulse-theme', isDark ? 'light' : 'dark');
   };
 
-  const logout = async () => {
-    await api.post('/api/auth/logout');
-    onLogout();
-  };
+  const logout = async () => { await api.post('/api/auth/logout'); onLogout(); };
 
   const navContent = (
-    <nav className="space-y-1 p-3">
+    <nav className="space-y-1 px-4 py-4">
       {navItems.map((item) => {
         const Icon = item.icon;
         return (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            onClick={() => setMobileOpen(false)}
-            className={({ isActive }) =>
-              clsx(
-                'flex h-9 items-center gap-3 rounded-md px-3 text-sm font-medium transition',
-                isActive
-                  ? 'bg-zinc-100 text-zinc-950 dark:bg-zinc-800 dark:text-zinc-100'
-                  : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
-              )
-            }
-          >
-            <Icon size={16} />
+          <NavLink key={item.to} to={item.to} onClick={() => setMobileOpen(false)}
+            className={({ isActive }) => clsx(
+              'flex h-10 items-center gap-3 rounded-xl px-4 text-sm font-medium transition',
+              isActive
+                ? 'bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400'
+                : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+            )}>
+            <Icon size={18} />
             {item.label}
           </NavLink>
         );
@@ -73,60 +51,60 @@ export function Layout({ user, onLogout }: { user: User; onLogout: () => void })
 
   return (
     <div className="min-h-screen">
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 md:block">
-        <div className="flex h-14 items-center border-b border-zinc-200 px-4 dark:border-zinc-800">
-          <div className="font-mono text-sm font-semibold tracking-normal">MoneyPulse</div>
+      {/* Sidebar desktop */}
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 md:block">
+        <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6 dark:border-slate-800">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 text-white text-xs font-bold">M</div>
+          <span className="text-base font-bold tracking-tight">MoneyPulse</span>
         </div>
         {navContent}
       </aside>
 
-      {/* Mobile overlay nav */}
+      {/* Mobile nav */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <button aria-label="关闭菜单" className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-            <div className="flex h-14 items-center justify-between border-b border-zinc-200 px-4 dark:border-zinc-800">
-              <div className="font-mono text-sm font-semibold">MoneyPulse</div>
-              <button onClick={() => setMobileOpen(false)} className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">
-                <X size={18} />
-              </button>
+          <button aria-label="关闭" className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute inset-y-0 left-0 w-72 bg-white dark:bg-slate-950 shadow-2xl">
+            <div className="flex h-16 items-center justify-between border-b border-slate-100 px-6 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-600 text-white text-xs font-bold">M</div>
+                <span className="text-base font-bold">MoneyPulse</span>
+              </div>
+              <button onClick={() => setMobileOpen(false)} className="text-slate-400 hover:text-slate-700"><X size={20} /></button>
             </div>
             {navContent}
           </aside>
         </div>
       )}
 
-      <div className="md:pl-60">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-zinc-200 bg-white/90 px-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
-          <div className="flex items-center gap-3">
-            <button
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 md:hidden"
-              onClick={() => setMobileOpen(true)}
-              aria-label="打开菜单"
-            >
-              <Menu size={18} />
+      <div className="md:pl-64">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-950/80">
+          <div className="flex items-center gap-4">
+            <button className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden" onClick={() => setMobileOpen(true)} aria-label="菜单">
+              <Menu size={20} />
             </button>
             <div>
-              <h1 className="text-lg font-semibold">{current?.label ?? 'MoneyPulse'}</h1>
-              <p className="hidden text-xs text-zinc-500 sm:block">单用户资产费用管理</p>
+              <h1 className="text-lg font-bold tracking-tight">{current?.label ?? 'MoneyPulse'}</h1>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <IconButton onClick={toggleTheme} title="切换主题">
-              <Moon className="hidden dark:block" size={15} />
-              <Sun className="block dark:hidden" size={15} />
+              <Moon className="hidden dark:block" size={16} />
+              <Sun className="block dark:hidden" size={16} />
             </IconButton>
-            <div className="hidden border-l border-zinc-200 pl-3 text-right dark:border-zinc-800 sm:block">
-              <div className="text-xs font-medium">{user.username}</div>
-              <div className="text-[11px] text-zinc-500">{user.email}</div>
+            <div className="hidden items-center gap-3 border-l border-slate-200 pl-4 dark:border-slate-700 sm:flex">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-600 dark:bg-brand-500/20 dark:text-brand-400">
+                {user.username[0].toUpperCase()}
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-medium">{user.username}</div>
+                <div className="text-[11px] text-slate-500">{user.email}</div>
+              </div>
             </div>
-            <IconButton onClick={logout} title="登出">
-              <LogOut size={15} />
-            </IconButton>
+            <IconButton onClick={logout} title="登出"><LogOut size={16} /></IconButton>
           </div>
         </header>
-        <main className="mx-auto max-w-7xl px-4 py-5">
+        <main className="mx-auto max-w-7xl px-6 py-8">
           <Outlet />
         </main>
       </div>
