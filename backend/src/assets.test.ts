@@ -63,4 +63,47 @@ describe('asset APIs', () => {
     expect(response.status).toBe(400);
     expect(response.body.error.code).toBe('VALIDATION_ERROR');
   });
+
+  test('lists dated assets before undated assets by nearest due date', async () => {
+    const { agent } = await setupAgent();
+
+    await agent.post('/api/subscriptions').send({
+      name: 'No Due Date',
+      provider: 'Manual',
+      amountMinorUnits: 1000,
+      currency: 'USD',
+      billingCycle: 'monthly',
+      nextDueDate: null,
+      status: 'active'
+    });
+
+    await agent.post('/api/subscriptions').send({
+      name: 'Later Renewal',
+      provider: 'Manual',
+      amountMinorUnits: 1000,
+      currency: 'USD',
+      billingCycle: 'monthly',
+      nextDueDate: '2026-06-15',
+      status: 'active'
+    });
+
+    await agent.post('/api/subscriptions').send({
+      name: 'Soon Renewal',
+      provider: 'Manual',
+      amountMinorUnits: 1000,
+      currency: 'USD',
+      billingCycle: 'monthly',
+      nextDueDate: '2026-05-30',
+      status: 'active'
+    });
+
+    const list = await agent.get('/api/subscriptions');
+
+    expect(list.status).toBe(200);
+    expect(list.body.items.map((item: { name: string }) => item.name)).toEqual([
+      'Soon Renewal',
+      'Later Renewal',
+      'No Due Date'
+    ]);
+  });
 });

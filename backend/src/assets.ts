@@ -133,9 +133,8 @@ export function registerAssetRoutes(router: Router, context: AppContext): void {
           }
         }
 
-        const dueOrder = `COALESCE(${[...config.dueFields, "''"].join(', ')})`;
         const rows = context.db.all<Record<string, unknown>>(
-          `SELECT * FROM ${config.table} WHERE ${where.join(' AND ')} ORDER BY ${dueOrder} ASC, id DESC`,
+          `SELECT * FROM ${config.table} WHERE ${where.join(' AND ')} ORDER BY ${dueOrderClause(config.dueFields)}`,
           params
         );
         res.json({ items: rows.map((row) => mapAssetRow(config, row)) });
@@ -250,6 +249,19 @@ export function getDueDate(row: Record<string, unknown>, fields: string[]): stri
     }
   }
   return null;
+}
+
+function dueDateExpression(fields: string[]): string {
+  if (fields.length === 0) {
+    return 'NULL';
+  }
+  const nullableFields = fields.map((field) => `NULLIF(${field}, '')`);
+  return nullableFields.length === 1 ? nullableFields[0] : `COALESCE(${nullableFields.join(', ')})`;
+}
+
+function dueOrderClause(fields: string[]): string {
+  const dueDate = dueDateExpression(fields);
+  return `CASE WHEN ${dueDate} IS NULL THEN 1 ELSE 0 END ASC, ${dueDate} ASC, id DESC`;
 }
 
 export function normalizeBillingCycle(value: unknown): BillingCycle {

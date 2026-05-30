@@ -234,6 +234,24 @@ function migrate(db: DbClient): void {
       error_message TEXT,
       UNIQUE(asset_type, asset_id, due_date, days_before, status)
     );
+
+    CREATE INDEX IF NOT EXISTS idx_phones_status_due
+      ON phones (archived_at, status, next_due_date, expire_date, id);
+
+    CREATE INDEX IF NOT EXISTS idx_vps_status_due
+      ON vps (archived_at, status, next_due_date, expire_date, id);
+
+    CREATE INDEX IF NOT EXISTS idx_domains_status_due
+      ON domains (archived_at, status, next_due_date, expire_date, id);
+
+    CREATE INDEX IF NOT EXISTS idx_subscriptions_status_due
+      ON subscriptions (archived_at, status, next_due_date, id);
+
+    CREATE INDEX IF NOT EXISTS idx_expenses_paid_currency
+      ON expenses (paid_at, currency);
+
+    CREATE INDEX IF NOT EXISTS idx_reminder_logs_sent_at
+      ON reminder_logs (sent_at DESC, id DESC);
   `);
 
   seedSetting(db, 'reminderDays', [30, 14, 7, 3, 1, 0]);
